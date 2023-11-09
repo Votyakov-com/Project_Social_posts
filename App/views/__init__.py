@@ -1,1 +1,1 @@
-from flaskprojectsecond.App.views import users
+from flaskprojectsecond.App.views import users, posts

@@ -37,3 +37,25 @@ def creater():
         mimetype="application/json",
     )
     return response
+
+
+@app.get("/users/<int:user_id>")
+def get_user(user_id):
+    if not models.User.is_valid_id(user_id):
+        return Response(status=HTTPStatus.NOT_FOUND)
+    user = USERS[user_id]
+    response = Response(
+        json.dumps(
+            {
+                "id": user.id,
+                "first_name": user.first_name,
+                "last_name": user.last_name,
+                "email": user.email,
+                "total_reactions": user.total_reactions,
+                "posts": user.posts,
+            }
+        ),
+        HTTPStatus.OK,
+        mimetype="application/json",
+    )
+    return response
