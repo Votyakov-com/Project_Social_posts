@@ -5,14 +5,13 @@ import emoji
 
 
 class User:
-    def __init__(self, id, first_name, last_name, email, total_reations=0, posts=None):
+    def __init__(self, id, first_name, last_name, email, total_reactions=0, posts=None):
         self.id = id
         self.first_name = first_name
         self.last_name = last_name
         self.email = email
-        self.total_reactions = total_reations
+        self.total_reactions = total_reactions
         self.posts = [] if posts == None else posts
-        self.history = []
 
     @staticmethod
     def is_valid_email(email):
@@ -22,6 +21,23 @@ class User:
     def is_valid_id(user_id):
         return isinstance(user_id, int) and 0 <= user_id < len(USERS)
 
+    def write_post(self, post):
+        self.posts.append(post)
+
+    def show_message_of_posts(self):
+        result = []
+        for post in self.posts:
+            result.append(post.text)
+        return result
+
+    def get_reactions(self, number):
+        self.total_reactions += number
+
+    def __lt__(self, other):
+        return self.total_reactions < other.total_reactions
+
+    def __gt__(self, other):
+        return self.total_reactions > other.total_reactions
 
 class Post:
     def __init__(self, id, author_id, text, reactions=None):
@@ -35,8 +51,14 @@ class Post:
         return isinstance(post_id, int) and 0 <= post_id < len(POSTS)
 
     def add_reaction(self, reaction):
-        if isinstance(reaction, str):
+        if emoji.is_emoji(reaction):
             self.reactions.append(reaction)
+
+    def __lt__(self, other):
+        return len(self.reactions) < len(other.reactions)
+
+    def __gt__(self, other):
+        return len(self.reactions) > len(other.reactions)
 
 
 class Reaction:

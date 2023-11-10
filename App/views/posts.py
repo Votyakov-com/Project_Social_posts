@@ -14,6 +14,8 @@ def create_post():
     post_id = len(POSTS)
     post = models.Post(post_id, author_id, text)
     POSTS.append(post)
+    user = USERS[author_id]
+    user.write_post(post)
     response = Response(
         json.dumps(
             {
@@ -63,4 +65,6 @@ def add_reactions(post_id):
     reaction.emojize()
     post = POSTS[post_id]
     post.add_reaction(reaction.emojy)
+    user = USERS[post.author_id]
+    user.get_reactions(1)
     return Response(status=HTTPStatus.OK)
